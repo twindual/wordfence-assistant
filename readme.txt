@@ -33,6 +33,10 @@ If you click the menu option the data management options are self explanatory.
 
 == Changelog ==
 
+= 1.0.4 = 
+* Added PSR-2 compliance
+* Updated for Namespace support
+
 = 1.0.3 =
 * Added Firewall uninstall tools.
 
