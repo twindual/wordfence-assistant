@@ -1,21 +1,3 @@
-Skip to content
-This repository
-Search
-Pull requests
-Issues
-Gist
- @twindual
- Sign out
- Unwatch 1
-  Star 0
-  Fork 0 twindual/wordfence-assistant
- Code  Issues 0  Pull requests 0  Projects 0  Wiki  Pulse  Graphs  Settings
-Branch: master Find file Copy pathwordfence-assistant/readme.txt
-f9bac5e  a minute ago
-@twindual twindual Initial commit of v1.0.3 from WordPress SVN
-1 contributor
-RawBlameHistory     
-46 lines (33 sloc)  1.83 KB
 === Wordfence Assistant ===
 Contributors: mmaunder
 Tags: wordfence, wordfence assistant, wordfence helper, wordfence security assistant, wordfence security helper 
@@ -61,5 +43,3 @@ If you click the menu option the data management options are self explanatory.
 = 1.0.1 =
 * Initial release.
 
-Contact GitHub API Training Shop Blog About
-© 2017 GitHub, Inc. Terms Privacy Security Status Help
