@@ -2,7 +2,7 @@
 namespace Wordfence;
 
 if (!defined('WFWAF_LOG_PATH')) {
-	define('WFWAF_LOG_PATH', WP_CONTENT_DIR . '/wflogs/');
+	define('WFWAF_LOG_PATH', content_url() . '/wflogs/');
 }
 
 require_once 'WfaWAFAutoPrependUninstaller.php';
@@ -168,7 +168,7 @@ class WordfenceAssistant
 
 	public static function mainMenu()
 	{
-		require plugins_url() . '/wordfence-assistant/lib/mainMenu.php';
+		require self::getBaseUrl() . 'lib/mainMenu.php';
 	}
 
 	public static function uninstallPlugin() { }
