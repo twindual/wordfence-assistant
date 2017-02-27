@@ -3,7 +3,7 @@ Contributors: mmaunder
 Tags: wordfence, wordfence assistant, wordfence helper, wordfence security assistant, wordfence security helper 
 Requires at least: 3.8
 Tested up to: 4.5.2
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 
 Wordfence Assistant provides data management utilities for Wordfence users.  
 

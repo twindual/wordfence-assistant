@@ -53,6 +53,4 @@
 		<input class="button-primary" type="button" name="but1" value="Delete all Live Traffic Data" onclick="WFAST.clearLiveTraffic(); return;" />
 	</p>
 	</div>
-
 </div>
-
