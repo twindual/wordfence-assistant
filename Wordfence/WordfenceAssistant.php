@@ -33,25 +33,30 @@ class WordfenceAssistant
 
 	public static function ajax_do_callback()
 	{
+		$response = '';
 		if (!self::isAdmin()) {
-			die(json_encode(array('errorMsg' => "You appear to have logged out or you are not an admin. Please sign-out and sign-in again.")));
-		}
-		$func = $_POST['func'];
-		$nonce = $_POST['nonce'];
-		if (!wp_verify_nonce($nonce, 'wp-ajax')) { 
-			die(json_encode(array('errorMsg' => "Your browser sent an invalid security token to Wordfence. Please try reloading this page or signing out and in again.")));
-		}
-		if ($func == 'deleteAll') {
-			return self::deleteAll();
-		} elseif ($func == 'clearLocks') {
-			return self::clearLocks();
-		} elseif ($func == 'disableFirewall') {
-			return self::disableFirewall();
-		} elseif ($func == 'clearLiveTraffic') {
-			return self::clearLiveTraffic();
+			$response = json_encode(array('errorMsg' => "You appear to have logged out or you are not an admin. Please sign-out and sign-in again."));
 		} else {
-			die(json_encode(array('errorMsg' => "An invalid operation was requested.")));
+			$func = $_POST['func'];
+			$nonce = $_POST['nonce'];
+			if (!wp_verify_nonce($nonce, 'wp-ajax')) { 
+				$response = json_encode(array('errorMsg' => "Your browser sent an invalid security token to Wordfence. Please try reloading this page or signing out and in again."));
+			} else {
+				if ($func == 'deleteAll') {
+					$response = self::deleteAll();
+				} elseif ($func == 'clearLocks') {
+					$response = self::clearLocks();
+				} elseif ($func == 'disableFirewall') {
+					$response = self::disableFirewall();
+				} elseif ($func == 'clearLiveTraffic') {
+					$response = self::clearLiveTraffic();
+				} else {
+					$response = json_encode(array('errorMsg' => "An invalid operation was requested."));
+				}
+			}
 		}
+
+		exit($response);
 	}
 
 	public static function clearLiveTraffic()
@@ -59,7 +64,7 @@ class WordfenceAssistant
 		global $wpdb;
 		$wpdb->query("truncate table " . $wpdb->base_prefix . "wfHits");
 		$wpdb->query("delete from " . $wpdb->base_prefix . "wfHits");
-		die(json_encode(array('msg' => "All Wordfence live traffic data deleted.")));
+		return json_encode(array('msg' => "All Wordfence live traffic data deleted."));
 	}
 
 	public static function clearLocks()
@@ -70,13 +75,13 @@ class WordfenceAssistant
 			$wpdb->query("truncate table " . $wpdb->base_prefix . "$t"); //Some users don't have truncate permission but if they do the next query will return immediatelly. 
 			$wpdb->query("delete from " . $wpdb->base_prefix . "$t");
 		}
-		die(json_encode(array('msg' => "All locked IPs, locked out users and advanced blocks cleared.")));
+		return json_encode(array('msg' => "All locked IPs, locked out users and advanced blocks cleared."));
 	}
 
 	public static function disableFirewall()
 	{
 		self::_disableFirewall();
-		die(json_encode(array('msg' => "Wordfence firewall has been disabled.")));
+		return json_encode(array('msg' => "Wordfence firewall has been disabled."));
 	}
 
 	private static function _disableFirewall()
@@ -99,27 +104,31 @@ class WordfenceAssistant
 
 	public static function deleteAll()
 	{
+		$response = '';
 		if (defined('WORDFENCE_VERSION')) {
-			die(json_encode(array('errorMsg' => "Please deactivate the Wordfence plugin before you delete all its data.")));
-		}
-		global $wpdb;
-		self::_disableFirewall();
-		$tables = array('wfBadLeechers', 'wfBlocks', 'wfBlocksAdv', 'wfConfig', 'wfCrawlers', 'wfFileMods', 'wfHits', 'wfHoover', 'wfIssues', 'wfLeechers', 'wfLockedOut', 'wfLocs', 'wfLogins', 'wfNet404s', 'wfReverseCache', 'wfScanners', 'wfStatus', 'wfThrottleLog', 'wfVulnScanners');
-		foreach ($tables as $t) {
-			$wpdb->query("drop table " . $wpdb->base_prefix . "$t");
-		}
-		update_option('wordfenceActivated', 0);
-		wp_clear_scheduled_hook('wordfence_daily_cron');
-		wp_clear_scheduled_hook('wordfence_hourly_cron');
-		//Remove old legacy cron job if it exists
-		wp_clear_scheduled_hook('wordfence_scheduled_scan');
-		wp_clear_scheduled_hook('wordfence_start_scheduled_scan'); //Unschedule legacy scans without args
-		//Any additional scans will fail and won't be rescheduled. 
-		foreach (array('wordfence_version', 'wordfenceActivated') as $opt) {
-			delete_option($opt);
+			$response = json_encode(array('errorMsg' => "Please deactivate the Wordfence plugin before you delete all its data."));
+		} else {
+			global $wpdb;
+			self::_disableFirewall();
+			$tables = array('wfBadLeechers', 'wfBlocks', 'wfBlocksAdv', 'wfConfig', 'wfCrawlers', 'wfFileMods', 'wfHits', 'wfHoover', 'wfIssues', 'wfLeechers', 'wfLockedOut', 'wfLocs', 'wfLogins', 'wfNet404s', 'wfReverseCache', 'wfScanners', 'wfStatus', 'wfThrottleLog', 'wfVulnScanners');
+			foreach ($tables as $t) {
+				$wpdb->query("drop table " . $wpdb->base_prefix . "$t");
+			}
+			update_option('wordfenceActivated', 0);
+			wp_clear_scheduled_hook('wordfence_daily_cron');
+			wp_clear_scheduled_hook('wordfence_hourly_cron');
+			//Remove old legacy cron job if it exists
+			wp_clear_scheduled_hook('wordfence_scheduled_scan');
+			wp_clear_scheduled_hook('wordfence_start_scheduled_scan'); //Unschedule legacy scans without args
+			//Any additional scans will fail and won't be rescheduled. 
+			foreach (array('wordfence_version', 'wordfenceActivated') as $opt) {
+				delete_option($opt);
+			}
+
+			$response = json_encode(array('msg' => "All Wordfence tables and data removed."));
 		}
 
-		die(json_encode(array('msg' => "All Wordfence tables and data removed.")));
+		return $response;
 	}
 
 	public static function getBaseURL()
