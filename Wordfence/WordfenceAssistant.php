@@ -20,7 +20,7 @@ class WordfenceAssistant
 		wp_localize_script('wordfenceAstjs', 'WordfenceAstVars', array(
 			'ajaxURL' => admin_url('admin-ajax.php'),
 			'firstNonce' => wp_create_nonce('wp-ajax')
-			));
+		));
 	}
 
 	public static function admin_menus()
@@ -155,17 +155,19 @@ class WordfenceAssistant
 
 	public static function isAdmin()
 	{
+		$isAdmin = fasle;
 		if (is_multisite()) {
 			if(current_user_can('manage_network')) {
-				return true;
+				$isAdmin = true;
 			}
 		} else {
 			if (current_user_can('manage_options')) {
-				return true;
+				$isAdmin = true;
 			}
 		}
-		return false;
+		return $isAdmin;
 	}
+
 
 	public static function isAdminPageMU()
 	{
