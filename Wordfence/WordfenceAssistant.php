@@ -13,30 +13,30 @@ class WordfenceAssistant
 {	
 	public static function admin_init()
 	{
-		if (!self::isAdmin()) { return; }
-		add_action('wp_ajax_wordfenceAssistant_do', 'Wordfence\WordfenceAssistant::ajax_do_callback');
-		wp_enqueue_script('wordfenceAstjs', self::getBaseURL() . 'js/admin.js', array('jquery'), WORDFENCE_VERSION);
-		wp_enqueue_style('wordfenceast-main-style', self::getBaseURL() . 'css/main.css', '', WORDFENCE_VERSION);
-		wp_localize_script('wordfenceAstjs', 'WordfenceAstVars', array(
-			'ajaxURL' => admin_url('admin-ajax.php'),
-			'firstNonce' => wp_create_nonce('wp-ajax')
-		));
+		if (self::isAdmin()) {
+			add_action('wp_ajax_wordfenceAssistant_do', 'Wordfence\WordfenceAssistant::ajax_do_callback');
+			wp_enqueue_script('wordfenceAstjs', self::getBaseURL() . 'js/admin.js', array('jquery'), WORDFENCE_VERSION);
+			wp_enqueue_style('wordfenceast-main-style', self::getBaseURL() . 'css/main.css', '', WORDFENCE_VERSION);
+			wp_localize_script('wordfenceAstjs', 'WordfenceAstVars', array(
+				'ajaxURL' => admin_url('admin-ajax.php'),
+				'firstNonce' => wp_create_nonce('wp-ajax')
+				));
+		}
 	}
 
 	public static function admin_menus()
 	{
-		if(!self::isAdmin()) { return; }
-		$icon = plugins_url() . '/wordfence-assistant/images/wordfence-logo-16x16.png';
-		add_submenu_page("WFAssistant", "WF Assistant", "WF Assistant", "activate_plugins", "WFAssistant", 'Wordfence\WordfenceAssistant::mainMenu');
-		add_menu_page('WF Assistant', 'WF Assistant', 'activate_plugins', 'WFAssistant', 'Wordfence\WordfenceAssistant::mainMenu', self::getBaseURL() . 'images/wordfence-logo-16x16.png'); 
+		if (self::isAdmin()) {
+			$icon = plugins_url() . '/wordfence-assistant/images/wordfence-logo-16x16.png';
+			add_submenu_page("WFAssistant", "WF Assistant", "WF Assistant", "activate_plugins", "WFAssistant", 'Wordfence\WordfenceAssistant::mainMenu');
+			add_menu_page('WF Assistant', 'WF Assistant', 'activate_plugins', 'WFAssistant', 'Wordfence\WordfenceAssistant::mainMenu', self::getBaseURL() . 'images/wordfence-logo-16x16.png'); 
+		}
 	}
 
 	public static function ajax_do_callback()
 	{
 		$response = '';
-		if (!self::isAdmin()) {
-			$response = json_encode(array('errorMsg' => "You appear to have logged out or you are not an admin. Please sign-out and sign-in again."));
-		} else {
+		if (self::isAdmin) {
 			$func = $_POST['func'];
 			$nonce = $_POST['nonce'];
 			if (!wp_verify_nonce($nonce, 'wp-ajax')) { 
@@ -54,8 +54,9 @@ class WordfenceAssistant
 					$response = json_encode(array('errorMsg' => "An invalid operation was requested."));
 				}
 			}
+		} else {
+			$response = json_encode(array('errorMsg' => "You appear to have logged out or you are not an admin. Please sign-out and sign-in again."));
 		}
-
 		exit($response);
 	}
 
@@ -64,7 +65,7 @@ class WordfenceAssistant
 		global $wpdb;
 		$wpdb->query("truncate table " . $wpdb->base_prefix . "wfHits");
 		$wpdb->query("delete from " . $wpdb->base_prefix . "wfHits");
-		return json_encode(array('msg' => "All Wordfence live traffic data deleted."));
+		return json_encode(array('msg' => "All Wordfence live traffic data has been deleted."));
 	}
 
 	public static function clearLocks()
@@ -75,7 +76,7 @@ class WordfenceAssistant
 			$wpdb->query("truncate table " . $wpdb->base_prefix . "$t"); //Some users don't have truncate permission but if they do the next query will return immediatelly. 
 			$wpdb->query("delete from " . $wpdb->base_prefix . "$t");
 		}
-		return json_encode(array('msg' => "All locked IPs, locked out users and advanced blocks cleared."));
+		return json_encode(array('msg' => "All locked IPs, locked out users and advanced blocks have been cleared."));
 	}
 
 	public static function disableFirewall()
@@ -106,7 +107,7 @@ class WordfenceAssistant
 	{
 		$response = '';
 		if (defined('WORDFENCE_VERSION')) {
-			$response = json_encode(array('errorMsg' => "Please deactivate the Wordfence plugin before you delete all its data."));
+			$response = json_encode(array('errorMsg' => "Please deactivate the Wordfence plugin before you delete all of its data."));
 		} else {
 			global $wpdb;
 			self::_disableFirewall();
@@ -124,10 +125,8 @@ class WordfenceAssistant
 			foreach (array('wordfence_version', 'wordfenceActivated') as $opt) {
 				delete_option($opt);
 			}
-
-			$response = json_encode(array('msg' => "All Wordfence tables and data removed."));
+			$response = json_encode(array('msg' => "All Wordfence tables and data have been removed."));
 		}
-
 		return $response;
 	}
 
@@ -147,7 +146,6 @@ class WordfenceAssistant
 			} else {
 				add_action('admin_menu', 'Wordfence\WordfenceAssistant::admin_menus');
 			}
-
 		}
 	}
 
@@ -167,7 +165,6 @@ class WordfenceAssistant
 		}
 		return $isAdmin;
 	}
-
 
 	public static function isAdminPageMU()
 	{
