@@ -29,28 +29,28 @@
 		the Wordfence files and activate Wordfence you won't be locked out any longer. You can then 
 		access the Wordfence Firewall page and modify the configuration to make sure you don't get locked out again.
 		<br /><br />
-		<input class="button-primary" type="button" name="but1" value="Disable Wordfence Firewall" onclick="WFAST.disableFirewall(); return ;" />
+		<input class="button-primary" type="button" id="btnDisableFirewall" name="btnDisableFirewall" value="Disable Wordfence Firewall" onclick="WFAST.disableFirewall(); ; return false;" />
 	</p>
-	<h3>Remove all Wordfence Data in the Database and elsewhere</h3>
+	<h3>Delete all Wordfence Data in the Database and elsewhere</h3>
 	<p>
 		Use this option if you've uninstalled Wordfence and don't plan to reinstall it. It will remove all Wordfence tables from your database
 		and clear any other data we may store in the system including scheduled jobs. Note that this does not delete the Wordfence files from your system.
 		<br /><br />
-		<input class="button-primary" type="button" name="but1" value="Delete all Wordfence Data and Tables" onclick="WFAST.delAll(); return false;" />
+		<input class="button-primary" type="button" id="btnDeleteAllData" name="btnDeleteAllData" value="Delete all Wordfence Data and Tables" onclick="WFAST.deleteAll(); return false;" />
 	</p>
-	<h3>Clear all locked out Wordfence IP's, locked out users and advanced blocks</h3>
+	<h3>Clear all Wordfence locked out IP's, locked out users and advanced blocks</h3>
 	<p>
 		If for some reason you can't disable the Firewall in Wordfence, you can use this option to clear all tables that contain locked out IP addresses,
 		locked out users and rules that may cause you to be locked out. 
 		<br /><br />
-		<input class="button-primary" type="button" name="but1" value="Clear all Wordfence locked out IPs, locked out Users and advanced blocks" onclick="WFAST.clearLocks();" />
+		<input class="button-primary" type="button" id="btnResetFirewall" name="btnResetFirewall" value="Clear all Wordfence locked out IPs, locked out Users and advanced blocks" onclick="WFAST.clearLocks(); return false;" />
 	</p>
 	<h3>Clear the Wordfence Live Traffic Table</h3>
 	<p>
 		Some users have requested the ability to manually purge the Wordfence Live Traffic table. The table is pruned
 		automatically by Wordfence from time to time, but clicking this button will do that for you. 
 		<br /><br />
-		<input class="button-primary" type="button" name="but1" value="Delete all Live Traffic Data" onclick="WFAST.clearLiveTraffic(); return;" />
+		<input class="button-primary" type="button" id="btnClearLiveTraffic" name="btnClearLiveTraffic" value="Clear the Wordfence Live Traffic Table" onclick="WFAST.clearLiveTraffic(); return false;" />
 	</p>
 	</div>
 </div>
