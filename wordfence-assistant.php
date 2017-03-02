@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Wordfence Assistant
+Plugin Name: Wordfence Assistant Rebooted
 Plugin URI: http://www.wordfence.com/
 Description: Wordfence Assistant - Helps Wordfence users with miscellaneous Wordfence data management tasks.  
 Author: Mark Maunder
@@ -9,11 +9,11 @@ Author URI: http://www.wordfence.com/
 */
 namespace Wordfence;
 
-require_once WP_PLUGIN_DIR . '/wordfence-assistant/Wordfence/WordfenceAssistant.php';
+require_once WP_PLUGIN_DIR . '/wordfence-assistant-rebooted/Wordfence/WordfenceAssistant.php';
 
-use Wordfence\WordfenceAssistant;
+use Wordfence\WordfenceAssistant as WordfenceAssistant;
 
-register_activation_hook(WP_PLUGIN_DIR . '/wordfence-assistant/wordfence-assistant.php', 'Wordfence\WordfenceAssistant::installPlugin');
-register_deactivation_hook(WP_PLUGIN_DIR . '/wordfence-assistant/wordfence-assistant.php', 'Wordfence\WordfenceAssistant::uninstallPlugin');
+register_activation_hook(WP_PLUGIN_DIR . '/wordfence-assistant-rebooted/wordfence-assistant.php', 'Wordfence\WordfenceAssistant::installPlugin');
+register_deactivation_hook(WP_PLUGIN_DIR . '/wordfence-assistant-rebooted/wordfence-assistant.php', 'Wordfence\WordfenceAssistant::uninstallPlugin');
 
-WordfenceAssistant::install_actions();
+$wfa = new WordfenceAssistant;
