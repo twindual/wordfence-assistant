@@ -36,6 +36,8 @@ If you click the menu option the data management options are self explanatory.
 = 1.0.4 = 
 * Added PSR-2 compliance
 * Updated for Namespace support
+* Fixed broken AJAX in settings form
+* Updated variables, methods, and HTML for consistency
 
 = 1.0.3 =
 * Added Firewall uninstall tools.
