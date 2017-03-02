@@ -3,9 +3,9 @@ window['wordfenceAst'] = {
 	loadingCount: 0,
 	nonce: '',
 	init: function() {
-		this.nonce = WordfenceAstVars.firstNonce; 
+		this.nonce = wp_ajax_data.ajaxNonce; 
 	},
-	delAll: function(){
+	deleteAll: function(){
 		if (confirm("Are you sure you want to delete all Wordfence data and tables?")) {
 			this.ajax({ func: 'deleteAll' });
 		}
@@ -30,19 +30,21 @@ window['wordfenceAst'] = {
 			if (data.length > 0) {
 				data += '&';
 			}
-			data += 'action=wordfenceAssistant_do&nonce=' + this.nonce;
+			data += 'action=wp_ajax_wordfenceAssistant_do&nonce=' + this.nonce;
 		} else if (typeof(data) == 'object') {
 			data['action'] = 'wordfenceAssistant_do';
-			data['nonce'] = this.nonce;
+			data['nonce'] = wp_ajax_data.ajaxNonce;
 		}
 		var self = this;
 		this.showLoading();
+		console.log('ajaxURL:', wp_ajax_data.ajaxURL);
 		jQuery.ajax({
 			type: 'POST',
-			url: WordfenceAstVars.ajaxURL,
+			url: wp_ajax_data.ajaxURL,
 			dataType: "json",
 			data: data,
 			success: function(json) { 
+				console.log('success:', json);
 				self.removeLoading();
 				if (json && json.nonce) {
 					self.nonce = json.nonce;
@@ -54,7 +56,8 @@ window['wordfenceAst'] = {
 					alert(json.msg);
 				}
 			},
-			error: function() { 
+			error: function(json) { 
+				console.log('error:', json);
 				self.removeLoading();  
 			}
 			});
